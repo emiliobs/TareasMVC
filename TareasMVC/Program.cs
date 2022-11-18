@@ -1,7 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using TareasMVC.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<ApplicationDbContext>(opciones => opciones.UseSqlServer("name=DeafultConnection"));
 
 var app = builder.Build();
 
