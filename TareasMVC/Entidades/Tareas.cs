@@ -1,9 +1,13 @@
-﻿namespace TareasMVC.Entidades
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TareasMVC.Entidades
 {
     public class Tareas
     {
         public int Id { get; set; }
 
+        [StringLength(250)]
+        [Required]
         public string Titulo { get; set; }
 
         public string Description { get; set; }

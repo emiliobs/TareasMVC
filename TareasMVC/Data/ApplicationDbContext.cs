@@ -9,5 +9,12 @@ namespace TareasMVC.Data
 
         //Aqqui la clase tareas la convertimos a una entodad por entityFramecore como una tabla de la base de datos:
         public DbSet<Tareas> Tareas { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //modelBuilder.Entity<Tareas>().Property(t => t.Titulo).HasMaxLength(250).IsRequired();
+        }
     }
 }
