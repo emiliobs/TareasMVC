@@ -12,6 +12,8 @@ namespace TareasMVC.Data
 
         public DbSet<Paso> Pasos { get; set; }
 
+        public DbSet<ArchivoAdjunto> ArchivoAdjuntos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
