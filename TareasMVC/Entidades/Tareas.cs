@@ -15,5 +15,8 @@ namespace TareasMVC.Entidades
         public int Orden { get; set; }
 
         public DateTime FechaCreacion { get; set; }
+
+        //propiedad de navegación de uno a muchos
+        public List<Paso> MyProperty { get; set; }
     }
 }
