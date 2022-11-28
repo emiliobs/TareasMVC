@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TareasMVC.Data;
 
@@ -7,6 +9,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(opciones => opciones.UseSqlServer("name=DefaultConnection"));
+
+builder.Services.AddAuthentication();
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(opciones =>
+{
+    opciones.SignIn.RequireConfirmedAccount = false;
+}).AddEntityFrameworkStores<ApplicationDbContext>()
+  .AddDefaultTokenProviders();
+
+//Aqui configuro trabajar con mis propias vistas y no con las del Entity.
+builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, opciones =>
+{
+    opciones.LogoutPath = "usuarios/login";
+    opciones.AccessDeniedPath = "/usuarios/login/";
+});
 
 var app = builder.Build();
 
@@ -23,6 +40,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
