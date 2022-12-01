@@ -1,12 +1,21 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using TareasMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Aqui genrio la politica para los usuaarios AUtenticados para luego pasarsela a MVC Core.
+var politicaUsuarioAutenticados = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(opciones =>
+{
+    //aqui le pesao la politica de autenticación a MVC Core.
+    opciones.Filters.Add(new AuthorizeFilter(politicaUsuarioAutenticados));
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(opciones => opciones.UseSqlServer("name=DefaultConnection"));
 
@@ -21,7 +30,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(opciones =>
 //Aqui configuro trabajar con mis propias vistas y no con las del Entity.
 builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, opciones =>
 {
-    opciones.LogoutPath = "usuarios/login";
+    opciones.LogoutPath = "/usuarios/login";
     opciones.AccessDeniedPath = "/usuarios/login/";
 });
 
