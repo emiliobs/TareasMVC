@@ -14,5 +14,7 @@ namespace TareasMVC.Models
 
         [Display(Name = "Recuérdame")]
         public bool Recuerdame { get; set; }
+
+        public decimal Pagos { get; set; }
     }
 }
