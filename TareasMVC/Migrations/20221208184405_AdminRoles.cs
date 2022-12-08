@@ -7,6 +7,7 @@ namespace TareasMVC.Migrations
     /// <inheritdoc />
     public partial class AdminRoles : Migration
     {
+        //roles
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
