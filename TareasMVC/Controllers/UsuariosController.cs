@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using TareasMVC.Data;
 using TareasMVC.Models;
 
 namespace TareasMVC.Controllers
@@ -11,11 +13,13 @@ namespace TareasMVC.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ApplicationDbContext _context;
 
-        public UsuariosController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public UsuariosController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
 
@@ -180,6 +184,28 @@ namespace TareasMVC.Controllers
             mensaje = "Ha occuriddo un error agregado el login";
 
             return RedirectToAction("Login", routeValues: new { mensaje });
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Listado(string mensaje = null)
+        {
+            var usuarios = await _context.Users.Select(u => new UsuarioViewModel
+            {
+                Email = u.Email,
+            }).ToListAsync();
+
+            var modelo = new UsuariosListadoViewModel
+            {
+                Usuarios = usuarios,
+                Mensaje = mensaje,
+            };
+
+            //var modelo = new UsuariosListadoViewModel();
+            //modelo.Usuarios = usuarios;
+            //modelo.Mensaje = mensaje;
+
+            return View(modelo);
 
         }
 
