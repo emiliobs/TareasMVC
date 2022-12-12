@@ -189,6 +189,7 @@ namespace TareasMVC.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Constantes.RolAdmin)]
         public async Task<IActionResult> Listado(string mensaje = null)
         {
             var usuarios = await _context.Users.Select(u => new UsuarioViewModel
@@ -211,6 +212,7 @@ namespace TareasMVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constantes.RolAdmin)]
         public async Task<IActionResult> HacerAdmin(string email)
         {
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -226,6 +228,7 @@ namespace TareasMVC.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constantes.RolAdmin)]
         public async Task<IActionResult> RemoverAdmin(string email)
         {
             var usuario = await _context.Users.FirstOrDefaultAsync(us => us.Email == email);
