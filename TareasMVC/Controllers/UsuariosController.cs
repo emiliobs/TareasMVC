@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TareasMVC.Data;
 using TareasMVC.Models;
+using TareasMVC.Servicios;
 
 namespace TareasMVC.Controllers
 {
@@ -209,5 +210,35 @@ namespace TareasMVC.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> HacerAdmin(string email)
+        {
+            var usuario = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            await _userManager.AddToRoleAsync(usuario, Constantes.RolAdmin);
+
+            return RedirectToAction("Listado", routeValues: new { mensaje = $"Rol asignado correctaemnet a {email}" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoverAdmin(string email)
+        {
+            var usuario = await _context.Users.FirstOrDefaultAsync(us => us.Email == email);
+
+            if (usuario is null)
+            {
+                return NotFound();
+            }
+
+            await _userManager.RemoveFromRoleAsync(usuario, Constantes.RolAdmin);
+
+            return RedirectToAction("Listado", routeValues: new { mensaje = $"Rol removido correctamente a {email}" });
+        }
     }
+
 }
