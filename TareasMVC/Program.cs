@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using TareasMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +18,7 @@ builder.Services.AddControllersWithViews(opciones =>
 {
     //aqui le pesao la politica de autenticación a MVC Core.
     opciones.Filters.Add(new AuthorizeFilter(politicaUsuarioAutenticados));
-});
+}).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
 builder.Services.AddDbContext<ApplicationDbContext>(opciones => opciones.UseSqlServer("name=DefaultConnection"));
 
@@ -34,7 +37,25 @@ builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.Ap
     opciones.AccessDeniedPath = "/usuarios/login/";
 });
 
+
+//Para multiple idiomas
+builder.Services.AddLocalization(opciones =>
+{
+    opciones.ResourcesPath = "Recursos";
+});
+
 var app = builder.Build();
+
+
+//Culturas soportadas:
+var culturasUISoportadas = new[] { "en", "es" };
+
+app.UseRequestLocalization(opciones =>
+{
+    opciones.DefaultRequestCulture = new RequestCulture("en");
+    opciones.SupportedCultures = culturasUISoportadas.Select(cultura => new CultureInfo(cultura)).ToList();
+});
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
