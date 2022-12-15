@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using TareasMVC;
 using TareasMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,13 @@ builder.Services.AddControllersWithViews(opciones =>
 {
     //aqui le pesao la politica de autenticación a MVC Core.
     opciones.Filters.Add(new AuthorizeFilter(politicaUsuarioAutenticados));
-}).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+}).AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+.AddDataAnnotationsLocalization(opciones =>
+{
+    opciones.DataAnnotationLocalizerProvider = (_, factorial) => factorial.Create(typeof(RecursoCompartido));
+});
+
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(opciones => opciones.UseSqlServer("name=DefaultConnection"));
 
