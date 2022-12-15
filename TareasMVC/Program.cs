@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using TareasMVC;
 using TareasMVC.Data;
+using TareasMVC.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,14 +56,19 @@ var app = builder.Build();
 
 
 //Culturas soportadas:
-var culturasUISoportadas = new[] { "en", "es" };
+//var culturasUISoportadas = new[] { "en", "es" };
 
 app.UseRequestLocalization(opciones =>
 {
     opciones.DefaultRequestCulture = new RequestCulture("en");
-    opciones.SupportedCultures = culturasUISoportadas.Select(cultura => new CultureInfo(cultura)).ToList();
+    opciones.SupportedCultures = Constantes.CulturasUISoportadas.Select(cultura => new CultureInfo(cultura.Value)).ToList();
 });
 
+//app.UseRequestLocalization(opciones =>
+//{
+//    opciones.DefaultRequestCulture = new RequestCulture("en");
+//    opciones.SupportedCultures = culturasUISoportadas.Select(cultura => new CultureInfo(cultura)).ToList();
+//});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
