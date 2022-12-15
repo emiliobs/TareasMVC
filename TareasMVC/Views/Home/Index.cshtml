@@ -6,9 +6,13 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">@localizer["BIenvenido"]</h1>
+    <h1 class="display-4">@localizer["Bienvenido"]</h1>
     <p>@localizer["Aprende Más"]</p>
 </div>
 <div>
-    <h3>@ViewBag.Saludo, Emilio Barrrea!</h3>
+    <h3>@ViewBag.Saludo, @User.Identity.Name</h3>
 </div>
+
+<button onclick="mostrarError()" class="btn btn-danger">
+    Mostrar mensaje de Error!
+</button>
