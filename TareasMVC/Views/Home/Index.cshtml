@@ -1,6 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization;
 @inject IViewLocalizer localizer
 
+@{
+    ViewData["Title"] = "Listado Tareas";
+}
+
 <div class="text-center">
     <h1 class="display-4">@localizer["Mis Tareas"]</h1>
 </div>
@@ -13,19 +17,25 @@
             </div>
         </div>
     </div>
+    <div data-bind="visible: cargando" class="spinner-border">
+        <span class="visually-hidden">Cargando.....</span>
+    </div>
 </div>
 
 
 @section Scripts{
     <script>
         const tareasListadoViewModel = {
-            tareas: ko.observableArray([
-            
-                {titulo: 'Todo por amor'},
-                {titulo: 'Locos por mary'}
-            
-            ])
+            tareas: ko.observableArray([]),
+            cargando: ko.observable(true)
+
         }
+
+        setTimeout(() => {
+            // Se va a ejecutar luego de 2 segundos;
+            tareasListadoViewModel.tareas.push({titulo: 'I Love C#.'});
+            tareasListadoViewModel.cargando(false);
+        }, 2000);
 
         ko.applyBindings(tareasListadoViewModel, document.getElementById('contenedor-listado-tareas'));
 
