@@ -7,6 +7,7 @@
 
 <div class="text-center">
     <h1 class="display-4">@localizer["Mis Tareas"]</h1>
+    <button type="button" class="btn btn-primary mb-3" onclick="agregarNuevaTareaAlListado()">@localizer["Agregar Nueva Tarea."]</button>
 </div>
 
 <div id="contenedor-listado-tareas" class="text-center">
@@ -63,7 +64,7 @@
 
         setTimeout(() => {
             // Se va a ejecutar luego de 2 segundos;
-            //tareasListadoViewModel.tareas.push({titulo: 'I Love C#.'});
+            tareasListadoViewModel.tareas.push({titulo: 'I Love C#.'});
             tareasListadoViewModel.cargando(false);
         }, 2000);
 
