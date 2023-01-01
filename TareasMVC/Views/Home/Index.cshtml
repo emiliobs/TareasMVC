@@ -14,9 +14,12 @@
     
     <div class="text-start" data-bind="foreach: tareas">
         <div name="tarea" class="border mb-2 p-2" style="cursor:pointer">
-            <div data-bind="text: titulo" class="fw-bold">
-
+            <div data-bind="text: titulo. hidden: esNuevo" class="fw-bold">
             </div>
+
+            <input type="text" name="titulo-tarea" autocomplete="off" data-bind="value: titulo, visible: esNuevo, 
+            event: {focusout: manejadorFocusoutTituloTarea}" />
+
         </div>
     </div>
 
@@ -60,13 +63,24 @@
              
         }
 
+        function tareasElementoListadoViewModel({id, titulo})
+                {
+
+                    var self = this;
+                    self.id = ko.observable(id);
+                    self.titulo = ko.observable(titulo);
+                    self.esNuevo = ko.pureComputed(function(){
+                        return self.id() == 0;
+                    })
+        }
+
         const tareasListadoViewModel = new tareasListadoViewModelFn();
 
         setTimeout(() => {
             // Se va a ejecutar luego de 2 segundos;
-            tareasListadoViewModel.tareas.push({titulo: 'I Love C#.'});
+            //tareasListadoViewModel.tareas.push({titulo: 'I Love C#.'});
             tareasListadoViewModel.cargando(false);
-        }, 2000);
+        }, 100);
 
         ko.applyBindings(tareasListadoViewModel, document.getElementById('contenedor-listado-tareas'));
 

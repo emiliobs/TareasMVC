@@ -12,15 +12,15 @@ using TareasMVC.Data;
 namespace TareasMVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221208184405_AdminRoles")]
-    partial class AdminRoles
+    [Migration("20230101014838_AdminRol1")]
+    partial class AdminRol1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -299,7 +299,12 @@ namespace TareasMVC.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<string>("UsuarioCreacionId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioCreacionId");
 
                     b.ToTable("Tareas");
                 });
@@ -375,6 +380,15 @@ namespace TareasMVC.Migrations
                         .IsRequired();
 
                     b.Navigation("Tarea");
+                });
+
+            modelBuilder.Entity("TareasMVC.Entidades.Tareas", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "UsuarioCreacion")
+                        .WithMany()
+                        .HasForeignKey("UsuarioCreacionId");
+
+                    b.Navigation("UsuarioCreacion");
                 });
 
             modelBuilder.Entity("TareasMVC.Entidades.Tareas", b =>

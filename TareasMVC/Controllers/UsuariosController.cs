@@ -222,9 +222,9 @@ namespace TareasMVC.Controllers
                 return NotFound();
             }
 
-            await _userManager.AddToRoleAsync(usuario, Constantes.RolAdmin);
+            await _userManager.AddToRoleAsync(usuario, "admin");
 
-            return RedirectToAction("Listado", routeValues: new { mensaje = $"Rol asignado correctaemnet a {email}" });
+            return RedirectToAction("Listado", routeValues: new { mensaje = $"Rol asignado correctamente a {email}" });
         }
 
         [HttpPost]
