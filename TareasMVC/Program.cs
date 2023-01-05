@@ -35,8 +35,7 @@ builder.Services.AddAuthentication();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(opciones =>
 {
     opciones.SignIn.RequireConfirmedAccount = false;
-}).AddEntityFrameworkStores<ApplicationDbContext>()
-  .AddDefaultTokenProviders();
+}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 //Aqui configuro trabajar con mis propias vistas y no con las del Entity.
 builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme, opciones =>
@@ -51,6 +50,8 @@ builder.Services.AddLocalization(opciones =>
 {
     opciones.ResourcesPath = "Recursos";
 });
+
+builder.Services.AddTransient<IServiciosUsuarios, ServiciosUsuarios>();
 
 var app = builder.Build();
 
