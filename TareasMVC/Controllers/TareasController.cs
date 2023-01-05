@@ -23,7 +23,9 @@ namespace TareasMVC.Controllers
         [HttpGet]
         public  async Task<List<Tareas>> Get()
         {
-            return await _context.Tareas.ToListAsync();
+            var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
+
+            return await _context.Tareas.Where(t => t.UsuarioCreacionId.Equals(usuarioId)).ToListAsync();
         }
 
         [HttpPost]
