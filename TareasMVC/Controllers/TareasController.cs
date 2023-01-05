@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using TareasMVC.Data;
 using TareasMVC.Entidades;
 using TareasMVC.Models;
@@ -25,8 +26,11 @@ namespace TareasMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<List<TareaDTO>> Get()
+        public async Task<ActionResult<List<TareaDTO>>> Get()
         {
+
+            
+
             var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
 
             var tareas = await _context.Tareas

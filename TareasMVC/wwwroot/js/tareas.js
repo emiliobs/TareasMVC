@@ -35,10 +35,14 @@ async function manejadorFocusoutTituloTarea(tarea)
     });
 
     if (respuesta.ok) {
+
         const json = await respuesta.json();
         tarea.id(json.id);
+
     } else {
-        //Mostrar mensaje de error.
+
+        manejoErrorApi(respuesta);
+
     }
 
 }
@@ -59,7 +63,7 @@ async function obtenerTareas()
 
     if (!respuesta.ok) {
 
-        return;
+        manejoErrorApi(respuesta);
 
     }
 
