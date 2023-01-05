@@ -52,6 +52,8 @@ builder.Services.AddLocalization(opciones =>
 });
 
 builder.Services.AddTransient<IServiciosUsuarios, ServiciosUsuarios>();
+//Aqui adicciono automapper al proyecto del asembly TareasMVC(program)
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
