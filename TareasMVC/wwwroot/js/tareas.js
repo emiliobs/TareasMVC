@@ -42,3 +42,33 @@ async function manejadorFocusoutTituloTarea(tarea)
     }
 
 }
+
+async function obtenerTareas()
+{
+
+    tareasListadoViewModel.cargando(true);
+
+    const respuesta = await fetch('/api/tareas', {
+
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+
+    });
+
+    if (!respuesta.ok) {
+
+        return;
+
+    }
+
+    const json = await respuesta.json();
+    tareasListadoViewModel.tareas([]);
+
+    json.forEach(valor => {
+        tareasListadoViewModel.tareas.push(new tareasElementoListadoViewModel(valor));
+    });
+
+    tareasListadoViewModel.cargando(false);
+}

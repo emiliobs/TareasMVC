@@ -44,7 +44,7 @@
         //    cargando: ko.observable(true)
         //}
 
-        const urlTareas = "/api/tareas'";
+        const urlTareas = "/api/tareas";
 
         function tareasListadoViewModelFn() {
             var self = this;
@@ -78,11 +78,13 @@
 
         const tareasListadoViewModel = new tareasListadoViewModelFn();
 
-        setTimeout(() => {
-            // Se va a ejecutar luego de 2 segundos;
-            //tareasListadoViewModel.tareas.push({titulo: 'I Love C#.'});
-            tareasListadoViewModel.cargando(false);
-        }, 100);
+        obtenerTareas();
+
+        //setTimeout(() => {
+        //    // Se va a ejecutar luego de 2 segundos;
+        //    //tareasListadoViewModel.tareas.push({titulo: 'I Love C#.'});
+        //    tareasListadoViewModel.cargando(false);
+        //}, 100);
 
         ko.applyBindings(tareasListadoViewModel, document.getElementById('contenedor-listado-tareas'));
 
