@@ -7,7 +7,8 @@
 
 }
 
-function manejadorFocusoutTituloTarea(tarea) {
+async function manejadorFocusoutTituloTarea(tarea)
+{
 
     const titulo = tarea.titulo();
 
@@ -19,5 +20,25 @@ function manejadorFocusoutTituloTarea(tarea) {
 
     }
 
-    tarea.id(1);
+    /*tarea.id(1);*/
+
+    const data = JSON.stringify(titulo);
+
+    const respuesta = await fetch('/api/tareas',
+        {
+
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (respuesta.ok) {
+        const json = await respuesta.json();
+        tarea.id(json.id);
+    } else {
+        //Mostrar mensaje de error.
+    }
+
 }
