@@ -21,11 +21,21 @@ namespace TareasMVC.Controllers
         }
 
         [HttpGet]
-        public  async Task<List<Tareas>> Get()
+        public  async Task<IActionResult> Get()
         {
             var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
 
-            return await _context.Tareas.Where(t => t.UsuarioCreacionId.Equals(usuarioId)).ToListAsync();
+            var tareas = await _context.Tareas
+                                 .Where(t => t.UsuarioCreacionId.Equals(usuarioId))
+                                 .OrderBy(t => t.Orden)
+                                 .Select(t => new
+                                 {
+                                     t.Id,
+                                     t.Titulo,
+                                 }).ToListAsync();
+
+
+            return Ok(tareas);
         }
 
         [HttpPost]
