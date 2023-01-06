@@ -1,4 +1,6 @@
-﻿function agregarNuevaTareaAlListado() {
+﻿const urlTareas = "/api/tareas";
+
+function agregarNuevaTareaAlListado() {
 
     tareasListadoViewModel.tareas.push(new tareasElementoListadoViewModel({ id: 0, titulo: '' }));
 
@@ -120,6 +122,38 @@ async function enviarIDsTareasAlBackend(ids) {
         }
 
     });
+
+}
+
+
+
+async function manajearClickTarea(tarea) {
+
+    if (tarea.esNuevo()) {
+        return;
+    }
+
+    const respuesta = await fetch(`/api/tareas/${tarea.id()}`, {
+
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+
+    });
+
+    if (!respuesta.ok) {
+        manejoErrorApi(respuesta);
+        return;
+    }
+
+    const json = await respuesta.json();
+
+    console.log(json);
+
+    tareaEditarVM.id = json.id;
+    tareaEditarVM.titulo(json.titulo);
+    tareaEditarVM.descripcion(json.descripcion);
 
 }
 

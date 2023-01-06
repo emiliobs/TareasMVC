@@ -51,6 +51,21 @@ namespace TareasMVC.Controllers
             return tareas;
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Tareas>> Get(int id)
+        {
+            var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
+
+            var tarea = await _context.Tareas.FirstOrDefaultAsync(t => t.Id == id && t.UsuarioCreacionId == usuarioId);
+
+            if (tarea is null)
+            {
+                return NotFound();
+            }
+
+            return tarea;
+        }
+
         [HttpPost]
         public async Task<ActionResult<Tareas>> Post([FromBody] string titulo)
         {

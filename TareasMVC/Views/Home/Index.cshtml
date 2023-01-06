@@ -11,13 +11,14 @@
 </div>
 
 <div id="contenedor-listado-tareas" class="text-center">
-    
+
     <div id="reordenable" class="text-start" data-bind="foreach: tareas">
-        <div name="tarea" class="border mb-2 p-2" style="cursor:pointer">
+        <div name="tarea" class="border mb-2 p-2" style="cursor:pointer" data-bind="click: manajearClickTarea">
+
             <div data-bind="text: titulo, hidden: esNuevo" class="fw-bold">
             </div>
 
-            <input type="text" name="titulo-tarea" autocomplete="off" data-bind="value: titulo, visible: esNuevo, attr: {'data-id': id}, 
+            <input type="text" name="titulo-tarea" autocomplete="off" data-bind="value: titulo, visible: esNuevo, attr: {'data-id': id},
             event: {focusout: manejadorFocusoutTituloTarea}" />
 
         </div>
@@ -38,7 +39,7 @@
 @section Scripts{
 
     <script>
-        
+
 
         //const tareasListadoViewModel = {
         //    tareas: ko.observableArray([]),
@@ -52,29 +53,35 @@
             self.tareas = ko.observableArray([]);
             self.cargando = ko.observable(true);
 
-            self.noHayTareas = ko.pureComputed(function(){
+            self.noHayTareas = ko.pureComputed(function () {
 
-                if(self.cargando()){
+                if (self.cargando()) {
 
-                    
+
 
                     return false;
                 }
 
                 return self.tareas().length === 0;
             });
-             
+
         }
 
-        function tareasElementoListadoViewModel({id, titulo})
-                {
+        function tareasElementoListadoViewModel({ id, titulo }) {
 
-                    var self = this;
-                    self.id = ko.observable(id);
-                    self.titulo = ko.observable(titulo);
-                    self.esNuevo = ko.pureComputed(function(){
-                        return self.id() == 0;
-                    })
+            var self = this;
+            self.id = ko.observable(id);
+            self.titulo = ko.observable(titulo);
+            self.esNuevo = ko.pureComputed(function () {
+                return self.id() == 0;
+            })          
+
+        }
+
+        const tareaEditarVM = {
+            id: 0,
+            titulo: ko.observable(' '),
+            descripcion: ko.observable(' ')
         }
 
         const tareasListadoViewModel = new tareasListadoViewModelFn();
