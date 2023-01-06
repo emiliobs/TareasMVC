@@ -2,7 +2,6 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using TareasMVC.Data;
 using TareasMVC.Entidades;
 using TareasMVC.Models;
@@ -29,7 +28,7 @@ namespace TareasMVC.Controllers
         public async Task<ActionResult<List<TareaDTO>>> Get()
         {
 
-            
+
 
             var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
 
@@ -52,33 +51,63 @@ namespace TareasMVC.Controllers
             return tareas;
         }
 
-    [HttpPost]
-    public async Task<ActionResult<Tareas>> Post([FromBody] string titulo)
-    {
-        var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
-
-        var existeTareas = await _context.Tareas.AnyAsync(t => t.UsuarioCreacionId == usuarioId);
-
-        var orderMayor = 0;
-        if (existeTareas)
+        [HttpPost]
+        public async Task<ActionResult<Tareas>> Post([FromBody] string titulo)
         {
-            orderMayor = await _context.Tareas.Where(t => t.UsuarioCreacionId == usuarioId).Select(t => t.Orden).MaxAsync();
+            var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
+
+            var existeTareas = await _context.Tareas.AnyAsync(t => t.UsuarioCreacionId == usuarioId);
+
+            var orderMayor = 0;
+            if (existeTareas)
+            {
+                orderMayor = await _context.Tareas.Where(t => t.UsuarioCreacionId == usuarioId).Select(t => t.Orden).MaxAsync();
+            }
+
+            var tarea = new Tareas
+            {
+                Titulo = titulo,
+                UsuarioCreacionId = usuarioId,
+                FechaCreacion = DateTime.UtcNow,
+                Orden = orderMayor + 1,
+            };
+
+            _context.Tareas.Add(tarea);
+            await _context.SaveChangesAsync();
+
+            return tarea;
+
         }
 
-        var tarea = new Tareas
+        [HttpPost("ordenar")]
+        public async Task<IActionResult> Ordenar([FromBody] int[] ids)
         {
-            Titulo = titulo,
-            UsuarioCreacionId = usuarioId,
-            FechaCreacion = DateTime.UtcNow,
-            Orden = orderMayor + 1,
-        };
+            var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
 
-        _context.Tareas.Add(tarea);
-        await _context.SaveChangesAsync();
+            var tareas = await _context.Tareas.Where(t => t.UsuarioCreacionId == usuarioId).ToListAsync();
 
-        return tarea;
+            var tareasId = tareas.Select(t => t.Id);
+
+            var idsTareasNoPertenecenAlusuario = ids.Except(tareasId).ToList();
+
+            if (idsTareasNoPertenecenAlusuario.Any())
+            {
+                return Forbid();
+            }
+
+            var tareasDiccionario = tareas.ToDictionary(x => x.Id);
+
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                var tarea = tareasDiccionario[id];
+                tarea.Orden = i + 1;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
 
     }
-
-}
 }

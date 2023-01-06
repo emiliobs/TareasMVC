@@ -76,3 +76,64 @@ async function obtenerTareas()
 
     tareasListadoViewModel.cargando(false);
 }
+
+async function actualizarOrdenTareas() {
+
+    const ids = obtenerIdsTareas();
+
+    await enviarIDsTareasAlBackend(ids);
+
+    const arregloOrdenado = tareasElementoListadoViewModel.tareas.sorted(function () {
+
+        return ids.indexOf(a.id().toStrig()) - ids.indexOf(b.id().toStrig());
+
+    });
+
+    tareasListadoViewModel.tareas([]);
+    tareasListadoViewModel.tareas(arregloOrdenado);
+
+}
+
+function obtenerIdsTareas() {
+
+    const ids = $("[name=titulo-tarea]").map(function () {
+
+        return $(this).attr("data-id");
+
+    }).get();
+
+    return ids;
+
+}
+
+async function enviarIDsTareasAlBackend(ids) {
+
+    var data = JSON.stringify(ids);
+
+    await fetch(`${api/tareas}/ordener`, {
+
+        method: 'POST',
+        body: data,
+        headers: {
+
+            'Content-Type': 'application/json'
+        }
+
+    });
+
+}
+
+$(function () {
+
+    $("#reordenable").sortable({
+
+        axis: 'y',
+        stop: async function () {
+
+            await actualizarOrdenTareas();
+
+        }
+
+    })
+
+})
