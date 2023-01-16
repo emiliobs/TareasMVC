@@ -112,7 +112,7 @@ async function enviarIDsTareasAlBackend(ids) {
 
     var data = JSON.stringify(ids);
 
-    await fetch(`${api/tareas}/ordener`, {
+    await fetch("api/tareas/ordener", {
 
         method: 'POST',
         body: data,
@@ -196,6 +196,46 @@ async function editarTareaCompleta(tarea) {
 
     }
 }
+
+
+function intentarBorrarTarea(tarea) {
+    modalEditarTareaBootstrap.hide();
+
+    confirmarAccion({
+        callBackAceptar: () => {
+            borrarTarea(tarea);
+        },
+        callbackCancelar: () => {
+            modalEditarTareaBootstrap.show();
+        },
+
+        titulo: `Desea borrar la tarea  ${tarea.titulo()}?`
+    });
+}
+
+async function borrarTarea(tarea) {
+   /* const idTarea = tarea.id;*/
+
+    const respuesta = await fetch("/api/tareas/" + tarea.id, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (respuesta.ok) {
+
+        const indice = obtenerIndiceTareaEnEdicion();
+        tareasListadoViewModel.tareas.splice(indice, 1);
+    }
+}
+
+
+function obtenerIndiceTareaEnEdicion() {
+    return tareasListadoViewModel.tareas().findIndex(t => t.id() == tareaEditarVM.id);
+
+}
+
 
 $(function () {
 
