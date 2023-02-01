@@ -43,7 +43,7 @@ async function manejadorFocusoutTituloTarea(tarea)
 
     } else {
 
-        manejoErrorApi(respuesta);
+        manejarErrorApi(respuesta);
 
     }
 

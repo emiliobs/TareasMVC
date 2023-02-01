@@ -1,4 +1,4 @@
-async function manejoErrorApi(respuesta) {
+async function manejarErrorApi(respuesta) {
 
     let mensajeError = '';
 
@@ -15,10 +15,10 @@ async function manejoErrorApi(respuesta) {
         mensajeError = errorInesperado;
     }
 
-    mostrarMEnsajeError(mensajeError);
+    mostrarMensajeError(mensajeError);
 }
 
-function mostrarMEnsajeError(mensaje) {
+function mostrarMensajeError(mensaje) {
     Swal.fire({
         icon: 'error',
         title: 'Oops.....',

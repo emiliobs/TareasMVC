@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using System.Text.Json.Serialization;
 using TareasMVC;
 using TareasMVC.Data;
 using TareasMVC.Servicios;
@@ -24,6 +25,9 @@ builder.Services.AddControllersWithViews(opciones =>
 .AddDataAnnotationsLocalization(opciones =>
 {
     opciones.DataAnnotationLocalizerProvider = (_, factorial) => factorial.Create(typeof(RecursoCompartido));
+}).AddJsonOptions(optios =>
+{
+    optios.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 
