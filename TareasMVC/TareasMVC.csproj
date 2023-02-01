@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Home\_Pasossss.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Remove="Recursos\Controllers\HomeController.en.resx" />
   </ItemGroup>
 
@@ -22,6 +26,10 @@
 
   <ItemGroup>
     <Resource Include="Recursos\Controllers\HomeController.en.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Home\_Pasossss.cshtml" />
   </ItemGroup>
 
 </Project>
