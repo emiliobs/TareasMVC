@@ -94,3 +94,14 @@ async function actualizarPaso(data, id) {
     }
 }
 
+function manejarClickCheckboxPaso(paso) {
+    if (paso.esNuevo()) {
+        return true;
+    }
+
+    const data = obtenerCuerpoPeticionPaso(paso);
+    actualizarPaso(data, paso.id());
+
+    return true;
+}
+
