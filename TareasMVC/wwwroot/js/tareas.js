@@ -155,6 +155,13 @@ async function manajearClickTarea(tarea) {
     tareaEditarVM.titulo(json.titulo);
     tareaEditarVM.descripcion(json.descripcion);
 
+    //Limpiar el arreglo de pasos:
+    tareaEditarVM.pasos([]);
+
+    json.pasos.forEach(paso => {
+        tareaEditarVM.pasos.push({ ...paso, modoEdicion: false })
+    });
+
     modalEditarTareaBootstrap.show();
 
 
