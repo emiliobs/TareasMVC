@@ -28,7 +28,7 @@ namespace TareasMVC.Controllers
 
             if (tarea is null)
             {
-                return NotFound();  
+                return NotFound();
             }
 
             if (tarea.UsuarioCreacionId != UsuarioId)
@@ -47,9 +47,9 @@ namespace TareasMVC.Controllers
 
 
             //Aqui creo un nuevo paso:
-            var paso = new Paso 
+            var paso = new Paso
             {
-                TareaId = tareaId,                 
+                TareaId = tareaId,
                 Orden = ordenMayor,
                 Descripcion = pasoCrearDTO.Descripcion,
                 Realizado = pasoCrearDTO.Realizado,
@@ -57,13 +57,37 @@ namespace TareasMVC.Controllers
 
             _context.Add(paso);
             await _context.SaveChangesAsync();
-          
+
             return paso;
 
+        }
 
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(Guid id, [FromBody] PasoCrearDTO pasoCrearDTO)
+        {
+            var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
 
+            var paso = await _context.Pasos.Include(p => p.Tarea).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (paso is null)
+            {
+                return NotFound();
+            }
+
+            if (paso.Tarea.UsuarioCreacionId != usuarioId)
+            {
+                return Forbid();
+            }
+
+            paso.Descripcion = pasoCrearDTO?.Descripcion;
+            paso.Realizado = pasoCrearDTO.Realizado;
+
+            _context.SaveChanges();
+
+            return Ok();
 
         }
+
     }
 }
