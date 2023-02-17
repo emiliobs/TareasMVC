@@ -209,7 +209,7 @@ function intentarBorrarTarea(tarea) {
     modalEditarTareaBootstrap.hide();
 
     confirmarAccion({
-        callBackAceptar: () => {
+        callbackAceptar: () => {
             borrarTarea(tarea);
         },
         callbackCancelar: () => {

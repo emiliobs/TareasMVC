@@ -28,7 +28,7 @@ function mostrarMensajeError(mensaje) {
 }
 
 
-function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
+function confirmarAccion({ callbackAceptar, callbackCancelar, titulo }) {
     Swal.fire({
         title: titulo || 'Realmente deseas hacer esto?',
         icon: 'warning',
@@ -40,7 +40,7 @@ function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
     }).then((resultado) => {
         if (resultado.isConfirmed) {
 
-            callBackAceptar();
+            callbackAceptar();
         } else if (callbackCancelar) {
 
             //El usuario ha presionado el botón de cancelar.

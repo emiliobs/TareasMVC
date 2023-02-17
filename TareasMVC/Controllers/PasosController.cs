@@ -15,16 +15,16 @@ namespace TareasMVC.Controllers
 
         public PasosController(ApplicationDbContext context, IServiciosUsuarios serviciosUsuarios)
         {
-            this._context = context;
-            this._serviciosUsuarios = serviciosUsuarios;
+            _context = context;
+            _serviciosUsuarios = serviciosUsuarios;
         }
 
         [HttpPost("{tareaId:int}")]
         public async Task<ActionResult<Paso>> Post(int tareaId, [FromBody] PasoCrearDTO pasoCrearDTO)
         {
-            var UsuarioId = _serviciosUsuarios.ObtenerUsuarioId();
+            string UsuarioId = _serviciosUsuarios.ObtenerUsuarioId();
 
-            var tarea = await _context.Tareas.FirstOrDefaultAsync(t => t.Id == tareaId);
+            Tareas tarea = await _context.Tareas.FirstOrDefaultAsync(t => t.Id == tareaId);
 
             if (tarea is null)
             {
@@ -36,9 +36,9 @@ namespace TareasMVC.Controllers
                 return Forbid();
             }
 
-            var existenPasos = await _context.Pasos.AnyAsync(p => p.TareaId == tareaId);
+            bool existenPasos = await _context.Pasos.AnyAsync(p => p.TareaId == tareaId);
 
-            var ordenMayor = 0;
+            int ordenMayor = 0;
             if (existenPasos)
             {
                 ordenMayor = await _context.Pasos.Where(p => p.TareaId == tareaId).Select(p => p.Orden).MaxAsync();
@@ -47,7 +47,7 @@ namespace TareasMVC.Controllers
 
 
             //Aqui creo un nuevo paso:
-            var paso = new Paso
+            Paso paso = new()
             {
                 TareaId = tareaId,
                 Orden = ordenMayor,
@@ -55,8 +55,8 @@ namespace TareasMVC.Controllers
                 Realizado = pasoCrearDTO.Realizado,
             };
 
-            _context.Add(paso);
-            await _context.SaveChangesAsync();
+            _ = _context.Add(paso);
+            _ = await _context.SaveChangesAsync();
 
             return paso;
 
@@ -66,9 +66,9 @@ namespace TareasMVC.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(Guid id, [FromBody] PasoCrearDTO pasoCrearDTO)
         {
-            var usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
+            string usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
 
-            var paso = await _context.Pasos.Include(p => p.Tarea).FirstOrDefaultAsync(p => p.Id == id);
+            Paso paso = await _context.Pasos.Include(p => p.Tarea).FirstOrDefaultAsync(p => p.Id == id);
 
             if (paso is null)
             {
@@ -83,10 +83,34 @@ namespace TareasMVC.Controllers
             paso.Descripcion = pasoCrearDTO?.Descripcion;
             paso.Realizado = pasoCrearDTO.Realizado;
 
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
 
             return Ok();
 
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(Guid id, Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Paso> _)
+        {
+
+            string usuarioId = _serviciosUsuarios.ObtenerUsuarioId();
+
+            Paso paso = await _context.Pasos.Include(p => p.Tarea).FirstOrDefaultAsync(t => t.Id == id);
+
+            if (paso is null)
+            {
+                return NotFound();
+            }
+
+            if (paso.Tarea.UsuarioCreacionId != usuarioId)
+            {
+                return Forbid();
+            }
+
+             _context.Remove(paso);
+             await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
     }
